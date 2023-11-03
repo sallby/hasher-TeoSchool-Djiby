@@ -1,7 +1,9 @@
 FROM ruby:alpine
-RUN apk add --update build-base curl
-RUN gem install sinatra
-RUN gem install thin
-ADD hasher.rb /
+RUN apk --no-cache add --update build-base curl \
+    && gem install sinatra thin \
+    && apk del build-base
+WORKDIR /app
+COPY hasher.rb /app/
+RUN rm -rf /var/cache/apk/*
 CMD ["ruby", "hasher.rb"]
 EXPOSE 80
